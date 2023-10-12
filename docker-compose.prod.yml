@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:12.6
+    command: postgres -c 'max_connections=300'
+    environment:
+      POSTGRES_DB: office-tracking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8089:8080"
+    depends_on:
+      - postgres
+    restart: always

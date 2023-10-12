@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ALTER COLUMN identifier DROP NOT NULL;

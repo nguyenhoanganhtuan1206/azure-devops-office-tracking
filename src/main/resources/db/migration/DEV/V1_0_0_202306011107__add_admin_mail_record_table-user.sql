@@ -1,0 +1,2 @@
+INSERT INTO users (personal_email, first_name, last_name, role, identifier, position_id, qr_code, gender, password, contract_type)
+VALUES ('office.trackingOWT@gmail.com', 'Real', 'Admin', 'ADMIN', '999999999','961d553a-b8dd-11ed-afa1-0242ac120002', '999SSS', 'MALE', '$2a$12$jcdyaiK28fbuA7cSP3lxHO9raOJjCSNipsKU8ADW90VzQQ71Yh0Wq', 'EMPLOYEE');

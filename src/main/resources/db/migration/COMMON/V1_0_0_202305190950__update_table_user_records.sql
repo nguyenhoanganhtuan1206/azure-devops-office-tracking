@@ -1,0 +1,3 @@
+ALTER TABLE users
+    ADD COLUMN address VARCHAR(2048) ,
+    ADD COLUMN university VARCHAR(100);
