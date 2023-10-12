@@ -13,20 +13,24 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build
-  displayName: Build and push stage
+- stage: Build_Dev
+  displayName: Build an application
   jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+    - job: Build
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+        - script: |
+            sudo apt-get update
+            sudo apt-get install dos2unix
+            dos2unix gradlew
+          displayName: Convert the line endings to Unix format
+        - script: ./gradlew clean build
+          displayName: Clean and build new artifact
+
+        - task: PublishBuildArtifacts@1
+          displayName: Pubish build artifact
+          inputs:
+            PathtoPublish: "$(Build.SourcesDirectory)/build/libs/office-tracking-*.jar"
+            ArtifactName: drop
+            publishLocation: "Container"
