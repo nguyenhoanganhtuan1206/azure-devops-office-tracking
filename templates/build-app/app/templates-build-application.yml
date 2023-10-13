@@ -1,7 +1,7 @@
-jobs:
+jobs: 
   - job: Build
     pool:
-      vmImage: ${{ parameters.vmImageName }}
+      vmImage: 'ubuntu-latest'
     variables:
       jdkVersion: 17
     steps:
@@ -24,11 +24,30 @@ jobs:
       - script: ./gradlew clean build
         displayName: Clean and build new artifact
 
-      - task: PublishBuildArtifact@1
+      - task: PublishBuildArtifacts@1
         displayName: Publish build artifact
         inputs:
-          PathtoBuild: "$(Build.SourcesDirectory)"
+          PathtoPublish: "$(Build.SourcesDirectory)"
           ArtifactName: "drop"
           publishLocation: "Container"
 
-  - template: /templates/build-app/docker/templates-docker-build-push.yml
+  - job: Build_Push_Image
+    displayName: 'Build an Push an image to Container Registry'
+    dependsOn: Build
+    condition: succeeded()
+
+    variables:
+      dockerRegistryServiceConnection: myDRServiceConnection
+      imageRepository: 'officetrackingimage'
+      containerRegistry: 'officetrackingcr.azurecr.io'
+      dockerfilePath: '**/Dockerfile'
+      nameRepository: 'officetrackingdocker'
+    
+    steps:
+      - task: Docker@2
+        displayName: 'Buil and Push'
+        inputs:
+          command: buildAndPush
+          repository: $(nameRepository)
+          containerRegistry: $(dockerRegistryServiceConnection)
+          Dockerfile: $(dockerfilePath)
