@@ -13,8 +13,8 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build_Dev
-  displayName: Build an application
+- stage: Build
+  displayName: 'Build an application'
   jobs:
     - job: Build
       pool:
@@ -25,16 +25,6 @@ stages:
             versionSpec: '17'
             jdkSourceOption: PreInstalled
             jdkArchitectureOption: 'x64'
-          # inputs:
-          #   versionSpec: '17'
-          #   jdkSourceOption: AzureStorage
-          #   jdkArchitectureOption: 'x64'
-          #   azureResourceManagerEndpoint: myARMServiceConnection
-          #   azureStorageAccountName: officetrackingsc
-          #   azureContainerName: jdkversion
-          #   azureCommonVirtualFile: 'jdk-17_windows-x64_bin.exe'
-          #   jdkDestinationDirectory: '$(agent.toolsDirectory)/jdk17'
-          #   cleanDestinationDirectory: true
   
         - script: |
             sudo apt-get update
@@ -54,3 +44,30 @@ stages:
             PathtoPublish: "$(Build.SourcesDirectory)"
             ArtifactName: "drop"
             publishLocation: "Container"
+
+- stage: Deploy_Dev
+  displayName: 'Deploy to Dev environment'
+  dependsOn: Build
+  condition: succeeded()
+
+  jobs:
+    - deployment: Deploy
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: test
+      variables:
+        - group: 'Release'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - download: current
+                artifact: drop
+              
+              - task: AzureWebApp@1
+                displayName: 'Azure App Service Deploy to Dev env'
+                inputs:
+                  azureSubscription: myARMSerivceConncetion
+                  appType: webAppLinux
+                  appName: $(WebAppDev)
+                  package: $(Pipeline.Workspace)/drop/
