@@ -42,9 +42,10 @@ jobs:
 
     steps:
       - task: Docker@2
-        displayName: "Buil and Push"
+        displayName: "Build and Push"
         inputs:
           command: buildAndPush
           repository: "officetrackingdocker"
           containerRegistry: myDRServiceConnection
           Dockerfile: "**/Dockerfile"
+          tags: 'latest'
