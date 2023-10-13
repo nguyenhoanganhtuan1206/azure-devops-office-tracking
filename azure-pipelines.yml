@@ -51,6 +51,6 @@ stages:
         - task: PublishBuildArtifacts@1
           displayName: Pubish build artifact
           inputs:
-            PathtoPublish: "$(Build.SourcesDirectory)/build/libs/**.jar"
-            ArtifactName: drop
+            PathtoPublish: "$(Build.SourcesDirectory)"
+            ArtifactName: "drop"
             publishLocation: "Container"
