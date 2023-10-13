@@ -24,7 +24,7 @@ jobs:
       - script: ./gradlew clean build
         displayName: Clean and build new artifact
 
-      - script: PublishBuildArtifact@1
+      - task: PublishBuildArtifact@1
         displayName: Publish build artifact
         inputs:
           PathtoBuild: "$(Build.SourcesDirectory)"
