@@ -47,6 +47,7 @@ stages:
               inputs:
                 connectedServiceNameARM: 'myARMServiceConnection'
                 imageToDeploy: officetrackingcr.azurecr.io/officetrackingdocker:latest
+                resourceGroup: 'azure-devops-tranning-rg'
                 # appSourcePath: '$(System.DefaultWorkingDirectory)'
                 # azureSubscription: 'myARMServiceConnection'
                 # acrName: 'officeTrackingCR'
@@ -55,4 +56,3 @@ stages:
                 # imageToBuild: 'officetrackingdocker:latest'
                 # imageToDeploy: 'officetrackingdocker:latest'
                 # containerAppName: 'office-tracking-app-container'
-                # resourceGroup: 'azure-devops-tranning-rg'
