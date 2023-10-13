@@ -21,58 +21,69 @@ stages:
 - stage: Build
   displayName: 'Build an application'
   jobs:
-    - job: Build
-      pool:
-        vmImage: 'ubuntu-latest'
-      steps:
-        - task: JavaToolInstaller@0
-          inputs:
-            versionSpec: '17'
-            jdkSourceOption: PreInstalled
-            jdkArchitectureOption: 'x64'
+    # - job: Build
+    #   pool:
+    #     vmImage: 'ubuntu-latest'
+    #   steps:
+    #     - task: JavaToolInstaller@0
+    #       inputs:
+    #         versionSpec: '17'
+    #         jdkSourceOption: PreInstalled
+    #         jdkArchitectureOption: 'x64'
   
-        - script: |
-            sudo apt-get update
-            sudo apt-get install dos2unix
-            dos2unix gradlew
-          displayName: Convert the line endings to Unix format
+    #     - script: |
+    #         sudo apt-get update
+    #         sudo apt-get install dos2unix
+    #         dos2unix gradlew
+    #       displayName: Convert the line endings to Unix format
           
-        - script: chmod +x gradlew
-          displayName: Grant permission for gradlew
+    #     - script: chmod +x gradlew
+    #       displayName: Grant permission for gradlew
 
-        - script: ./gradlew clean build
-          displayName: Clean and build new artifact
+    #     - script: ./gradlew clean build
+    #       displayName: Clean and build new artifact
 
-        - task: PublishBuildArtifacts@1
-          displayName: Pubish build artifact
+    #     - task: PublishBuildArtifacts@1
+    #       displayName: Pubish build artifact
+    #       inputs:
+    #         PathtoPublish: "$(Build.SourcesDirectory)"
+    #         ArtifactName: "drop"
+    #         publishLocation: "Container"
+
+    - job: Build_Push_Image
+      displayName: 'Build and Push an image to Container Registry'
+      steps:
+        - task: Docker@2
+          displayName: Build and Push
           inputs:
-            PathtoPublish: "$(Build.SourcesDirectory)"
-            ArtifactName: "drop"
-            publishLocation: "Container"
+            command: buildAndPush
+            containerRegistry: myDRServiceConnection
+            repository: "officetrackingdocker"
+            Dockerfile: "**/Dockerfile"
 
-- stage: Deploy_Dev
-  displayName: 'Deploy to Dev environment'
-  dependsOn: Build
-  condition: succeeded()
+# - stage: Deploy_Dev
+#   displayName: 'Deploy to Dev environment'
+#   dependsOn: Build
+#   condition: succeeded()
 
-  jobs:
-    - deployment: Deploy
-      pool:
-        vmImage: 'ubuntu-latest'
-      environment: test
-      variables:
-        - group: 'Release'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - download: current
-                artifact: drop
+  # jobs:
+  #   - deployment: Deploy
+  #     pool:
+  #       vmImage: 'ubuntu-latest'
+  #     environment: test
+  #     variables:
+  #       - group: 'Release'
+  #     strategy:
+  #       runOnce:
+  #         deploy:
+  #           steps:
+  #             - download: current
+  #               artifact: drop
               
-              - task: AzureWebApp@1
-                displayName: 'Azure App Service Deploy to Dev env'
-                inputs:
-                  azureSubscription: myARMServiceConnection
-                  appType: webAppLinux
-                  appName: $(WebAppDev)
-                  package: $(Pipeline.Workspace)/drop/
+  #             - task: AzureWebApp@1
+  #               displayName: 'Azure App Service Deploy to Dev env'
+  #               inputs:
+  #                 azureSubscription: myARMServiceConnection
+  #                 appType: webAppLinux
+  #                 appName: $(WebAppDev)
+  #                 package: $(Pipeline.Workspace)/drop/
