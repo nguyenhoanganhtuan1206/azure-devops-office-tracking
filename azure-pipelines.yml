@@ -51,6 +51,6 @@ stages:
         - task: PublishBuildArtifacts@1
           displayName: Pubish build artifact
           inputs:
-            PathtoPublish: "$(Build.SourcesDirectory)/build/libs/office-tracking-*.jar"
+            PathtoPublish: "$(Build.SourcesDirectory)/build/libs/**.jar"
             ArtifactName: drop
             publishLocation: "Container"
