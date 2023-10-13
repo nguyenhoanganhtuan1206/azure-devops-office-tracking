@@ -40,8 +40,8 @@ stages:
         runOnce:
           deploy:
             steps:
-              - download: current
-                artifact: drop
+              # - download: current
+              #   artifact: drop
               
               - task: AzureContainerApps@1
                 inputs:
