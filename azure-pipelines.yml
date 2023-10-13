@@ -6,86 +6,43 @@ pr:
 resources:
 - repo: self
 
+parameters:
+  - name: vmImageName
+    type: string
+    default: 'ubuntu-latest'
+
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'ac125636-b76f-41c6-aecf-a61404c3493c'
-  imageRepository: 'officetrackingimage'
-  containerRegistry: 'officetrackingcr.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build
-  displayName: 'Build an application'
+- template: templates/build/app/templates-build-application.yml
+
+- stage: Deploy_Dev
+  displayName: 'Deploy to Dev environment'
+  dependsOn: Build_Push_Image
+  condition: succeeded()
+
   jobs:
-    - job: Build
+    - deployment: Deploy
       pool:
         vmImage: 'ubuntu-latest'
-      steps:
-        - task: JavaToolInstaller@0
-          inputs:
-            versionSpec: '17'
-            jdkSourceOption: PreInstalled
-            jdkArchitectureOption: 'x64'
-  
-        - script: |
-            sudo apt-get update
-            sudo apt-get install dos2unix
-            dos2unix gradlew
-          displayName: Convert the line endings to Unix format
-          
-        - script: chmod +x gradlew
-          displayName: Grant permission for gradlew
-
-        - script: ./gradlew clean build
-          displayName: Clean and build new artifact
-
-        - task: PublishBuildArtifacts@1
-          displayName: Pubish build artifact
-          inputs:
-            PathtoPublish: "$(Build.SourcesDirectory)"
-            ArtifactName: "drop"
-            publishLocation: "Container"
-
-    - job: Build_Push_Image
-      displayName: 'Build and Push an image to Container Registry'
-      dependsOn: Build
-      condition: succeeded()
-      steps:
-        - task: Docker@2
-          displayName: Build and Push
-          inputs:
-            command: buildAndPush
-            containerRegistry: myDRServiceConnection
-            repository: "officetrackingdocker"
-            Dockerfile: "**/Dockerfile"
-
-# - stage: Deploy_Dev
-#   displayName: 'Deploy to Dev environment'
-#   dependsOn: Build_Push_Image
-#   condition: succeeded()
-
-  # jobs:
-  #   - deployment: Deploy
-  #     pool:
-  #       vmImage: 'ubuntu-latest'
-  #     environment: test
-  #     variables:
-  #       - group: 'Release'
-  #     strategy:
-  #       runOnce:
-  #         deploy:
-  #           steps:
-  #             - download: current
-  #               artifact: drop
+      environment: test
+      variables:
+        - group: 'Release'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - download: current
+                artifact: drop
               
-  #             - task: AzureWebApp@1
-  #               displayName: 'Azure App Service Deploy to Dev env'
-  #               inputs:
-  #                 azureSubscription: myARMServiceConnection
-  #                 appType: webAppLinux
-  #                 appName: $(WebAppDev)
-  #                 package: $(Pipeline.Workspace)/drop/
+              - task: AzureWebApp@1
+                displayName: 'Azure App Service Deploy to Dev env'
+                inputs:
+                  azureSubscription: myARMServiceConnection
+                  appType: webAppLinux
+                  appName: $(WebAppDev)
+                  package: $(Pipeline.Workspace)/drop/
