@@ -20,6 +20,22 @@ stages:
       pool:
         vmImage: 'ubuntu-latest'
       steps:
+        - task: JavaToolInstaller@0
+          inputs:
+            versionSpec: '17'
+            jdkSourceOption: PreInstalled
+            jdkArchitectureOption: 'x64'
+          # inputs:
+          #   versionSpec: '17'
+          #   jdkSourceOption: AzureStorage
+          #   jdkArchitectureOption: 'x64'
+          #   azureResourceManagerEndpoint: myARMServiceConnection
+          #   azureStorageAccountName: officetrackingsc
+          #   azureContainerName: jdkversion
+          #   azureCommonVirtualFile: 'jdk-17_windows-x64_bin.exe'
+          #   jdkDestinationDirectory: '$(agent.toolsDirectory)/jdk17'
+          #   cleanDestinationDirectory: true
+  
         - script: |
             sudo apt-get update
             sudo apt-get install dos2unix
