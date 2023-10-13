@@ -45,12 +45,14 @@ stages:
               
             - task: AzureContainerApps@1
               inputs:
-                appSourcePath: '$(System.DefaultWorkingDirectory)'
-                azureSubscription: 'myARMServiceConnection'
-                acrName: 'officeTrackingCR'
-                acrUsername: 'officeTrackingCR'
-                acrPassword: 'S2XfgEPHhKQd0HKvu0twVurf4XXoZFK1ewsQXkHWVY+ACRCnkduf'
-                imageToBuild: 'officetrackingdocker:latest'
-                imageToDeploy: 'officetrackingdocker:latest'
+                connectedServiceNameARM: 'myARMServiceConnection'
+                imageToDeploy: officetrackingcr.azurecr.io/officetrackingdocker:latest
+                # appSourcePath: '$(System.DefaultWorkingDirectory)'
+                # azureSubscription: 'myARMServiceConnection'
+                # acrName: 'officeTrackingCR'
+                # acrUsername: 'officeTrackingCR'
+                # acrPassword: 'S2XfgEPHhKQd0HKvu0twVurf4XXoZFK1ewsQXkHWVY+ACRCnkduf'
+                # imageToBuild: 'officetrackingdocker:latest'
+                # imageToDeploy: 'officetrackingdocker:latest'
                 # containerAppName: 'office-tracking-app-container'
-                resourceGroup: 'azure-devops-tranning-rg'
+                # resourceGroup: 'azure-devops-tranning-rg'
