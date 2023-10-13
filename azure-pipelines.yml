@@ -52,5 +52,5 @@ stages:
                 acrPassword: 'S2XfgEPHhKQd0HKvu0twVurf4XXoZFK1ewsQXkHWVY+ACRCnkduf'
                 imageToBuild: 'officetrackingdocker:latest'
                 imageToDeploy: 'officetrackingdocker:latest'
-                containerAppName: 'office-tracking-app-container'
+                # containerAppName: 'office-tracking-app-container'
                 resourceGroup: 'azure-devops-tranning-rg'
