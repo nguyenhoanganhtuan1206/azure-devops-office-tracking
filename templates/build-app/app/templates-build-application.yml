@@ -1,35 +1,34 @@
-- stage: Build
-  jobs:
-    - job: Build
-      pool:
-        vmImage: ${{ parameters.vmImageName }}
-      variables:
+jobs:
+  - job: Build
+    pool:
+      vmImage: ${{ parameters.vmImageName }}
+    variables:
       jdkVersion: 17
-      steps:
-        - task: JavaToolInstaller@0
-          displayName: Install jdk ver $(jdkVersion)
-          inputs:
-            versionSpec: $(jdkVersion)
-            jdkSourceOption: PreInstalled
-            jdkArchitectureOption: "x64"
+    steps:
+      - task: JavaToolInstaller@0
+        displayName: Install jdk ver $(jdkVersion)
+        inputs:
+          versionSpec: $(jdkVersion)
+          jdkSourceOption: PreInstalled
+          jdkArchitectureOption: "x64"
 
-        - script: |
-            sudo apt-get update
-            sudo apt-get install dos2unix
-            dos2unix gradlew
-          displayName: Convert the line endings to Unix format
+      - script: |
+          sudo apt-get update
+          sudo apt-get install dos2unix
+          dos2unix gradlew
+        displayName: Convert the line endings to Unix format
 
-        - script: chmod +x gradlew
-          displayName: Grant permission for gradlew
+      - script: chmod +x gradlew
+        displayName: Grant permission for gradlew
 
-        - script: ./gradlew clean build
-          displayName: Clean and build new artifact
+      - script: ./gradlew clean build
+        displayName: Clean and build new artifact
 
-        - script: PublishBuildArtifact@1
-          displayName: Publish build artifact
-          inputs:
-            PathtoBuild: "$(Build.SourcesDirectory)"
-            ArtifactName: "drop"
-            publishLocation: "Container"
-      
-    - template: /templates/build-app/docker/templates-docker-build-push.yml
+      - script: PublishBuildArtifact@1
+        displayName: Publish build artifact
+        inputs:
+          PathtoBuild: "$(Build.SourcesDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+
+  - template: /templates/build-app/docker/templates-docker-build-push.yml

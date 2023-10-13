@@ -13,12 +13,16 @@ parameters:
 
 variables:
   tag: '$(Build.BuildId)'
-
+    
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
-
+    
 stages:
-- template: /templates/build-app/app/templates-build-application.yml
+- stage: Build
+  jobs:
+    - template: templates/build-app/app/templates-build-application.yml
+      parameters:
+        vmImageName: $(vmImageName)
 
 - stage: Deploy_Dev
   displayName: 'Deploy to Dev environment'
@@ -28,7 +32,7 @@ stages:
   jobs:
     - deployment: Deploy
       pool:
-        vmImage: 'ubuntu-latest'
+        vmImage: ${{ parameters.vmImageName }}
       environment: test
       variables:
         - group: 'Release'
