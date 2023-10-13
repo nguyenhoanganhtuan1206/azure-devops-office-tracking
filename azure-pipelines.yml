@@ -18,7 +18,7 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
-- template: templates/build/app/templates-build-application.yml
+- template: /templates/build/app/templates-build-application.yml
 
 - stage: Deploy_Dev
   displayName: 'Deploy to Dev environment'
