@@ -43,16 +43,8 @@ stages:
               # - download: current
               #   artifact: drop
               
-            - task: AzureContainerApps@1
+            - task: AzureWebAppContainer@1
               inputs:
-                connectedServiceNameARM: 'myARMServiceConnection'
-                imageToDeploy: officetrackingcr.azurecr.io/officetrackingdocker:latest
-                resourceGroup: 'azure-devops-tranning-rg'
-                containerAppName: 'office-tracking-app-container'
-                appSourcePath: '$(System.DefaultWorkingDirectory)'
-                # azureSubscription: 'myARMServiceConnection'
-                acrName: 'officeTrackingCR'
-                acrUsername: 'officeTrackingCR'
-                acrPassword: 'S2XfgEPHhKQd0HKvu0twVurf4XXoZFK1ewsQXkHWVY+ACRCnkduf'
-                imageToBuild: officetrackingcr.azurecr.io/officetrackingdocker:latest
-                dockerfilePath: '$(System.DefaultWorkingDirectory)/Dockerfile'
+                appName: $(WebAppDev)
+                azureSubscription: myARMServiceConnection
+                containers: 'officetrackingdocker:latest'
