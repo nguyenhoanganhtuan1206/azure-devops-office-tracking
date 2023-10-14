@@ -54,5 +54,5 @@ stages:
                 acrName: 'officeTrackingCR'
                 acrUsername: 'officeTrackingCR'
                 acrPassword: 'S2XfgEPHhKQd0HKvu0twVurf4XXoZFK1ewsQXkHWVY+ACRCnkduf'
-                # imageToBuild: 'officetrackingdocker:latest'
-                # imageToDeploy: 'officetrackingdocker:latest'
+                imageToBuild: officetrackingcr.azurecr.io/officetrackingdocker:latest
+                dockerfilePath: '**/Dockerfile'
