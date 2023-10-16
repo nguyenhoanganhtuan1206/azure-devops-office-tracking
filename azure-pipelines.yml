@@ -45,11 +45,7 @@ stages:
               displayName: Download Artifact
 
             - script: |
-                cd $(System.ArtifactsDirectory)
-                ls -a
-                cd build
-                ls -a
-                cd libs
+                cd /home/vsts/work/1/drop/build/libs
                 ls -a
               displayName: Grant permission for farfile
               
@@ -58,4 +54,4 @@ stages:
                 appName: $(WebAppDev)
                 azureSubscription: myARMServiceConnection
                 containers: 'officetrackingcr.azurecr.io/officetrackingdocker:latest'
-                containerCommand:  'java -jar /home/vsts/work/1/a/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar'
+                containerCommand:  'java -jar /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar'
