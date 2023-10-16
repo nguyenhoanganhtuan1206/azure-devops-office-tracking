@@ -28,6 +28,8 @@ jobs:
           ls -la
           cd $(Build.SourcesDirectory)/build
           ls -la
+          cd libs
+          ls -la
         displayName: List all folders in build/libs
 
       - task: PublishBuildArtifacts@1
