@@ -40,8 +40,12 @@ stages:
         runOnce:
           deploy:
             steps:
-            - download: current
-              artifact: drop
+            - task: DownloadBuildArtifacts@1
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'drop'
+                downloadPath: '$(System.ArtifactsDirectory)'
 
             - script: |
                 cd $(Build.SourcesDirectory)
