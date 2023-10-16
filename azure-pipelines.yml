@@ -25,7 +25,7 @@ stages:
       displayName: List folders in /home/site/wwwroot
       inputs:
         script: |
-          ls -d $(Build.SourcesDirectory)/build/libs
+          ls -d $(Agent.BuildDirectory)/build/libs
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
