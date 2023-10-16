@@ -44,7 +44,12 @@ stages:
               artifact: drop
 
             - script: |
-                chmod +rwx $(Build.SourcesDirectory)/build/libs/office-tracking-0.0.1-SNAPSHOT.jar
+                cd $(Build.SourcesDirectory)
+                ls -a
+                cd build
+                ls -a
+                cd libs
+                ls -a
               displayName: Grant permission for farfile
               
             - task: AzureWebAppContainer@1
