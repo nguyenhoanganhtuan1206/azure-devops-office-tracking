@@ -45,13 +45,11 @@ stages:
               displayName: Download Artifact
 
             - script: |
-                cd /home/vsts/work/1/drop/build/libs
-                ls -a
-              displayName: Grant permission for farfile
+                java -jar /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar
+              displayName: Run application
               
             - task: AzureWebAppContainer@1
               inputs:
                 appName: $(WebAppDev)
                 azureSubscription: myARMServiceConnection
                 containers: 'officetrackingcr.azurecr.io/officetrackingdocker:latest'
-                containerCommand:  'java -jar /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar'
