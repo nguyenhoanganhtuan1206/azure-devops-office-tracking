@@ -27,6 +27,7 @@ jobs:
       - script: |
           cd $(Build.SourcesDirectory)/build/libs
           ls -la
+          pwd
         displayName: List all folders in build/libs
 
       - task: PublishBuildArtifacts@1
