@@ -21,7 +21,11 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - script: echo "ls/home/site/wwwroot/build/libs"
+    - task: Bash@3
+      displayName: List folders in /home/site/wwwroot
+      inputs:
+        script: |
+          ls -d /home/site/wwwroot/*/
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
