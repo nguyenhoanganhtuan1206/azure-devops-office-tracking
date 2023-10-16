@@ -48,4 +48,4 @@ stages:
                 appName: $(WebAppDev)
                 azureSubscription: myARMServiceConnection
                 containers: 'officetrackingdocker:latest'
-                containerCommand:  'java -jar /home/site/wwwroot/build/libs/office-tracking-0.0.1-SNAPSHOT-plain.jar'
+                containerCommand:  'java -jar $(Build.SourcesDirectory)/build/libs/office-tracking-0.0.1-SNAPSHOT-plain.jar'
