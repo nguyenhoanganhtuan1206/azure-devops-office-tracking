@@ -18,24 +18,18 @@ variables:
   vmImageName: 'ubuntu-latest'
     
 stages:
-# - stage: Build
-#   jobs:
-#     - template: templates/build-app/app/templates-build-application.yml
-#       parameters:
-#         vmImageName: $(vmImageName)
+- stage: Build
+  jobs:
+    - template: templates/build-app/app/templates-build-application.yml
+      parameters:
+        vmImageName: $(vmImageName)
 
 - stage: Deploy_Dev
   displayName: 'Deploy to Dev environment'
-  # dependsOn: Build
-  # condition: succeeded()
+  dependsOn: Build
+  condition: succeeded()
 
   jobs:
-    - job: 
-      steps:
-        - script: |
-           cd path/to/your/build/libs
-           ls -d */
-
     - deployment: Deploy
       pool:
         vmImage: ${{ parameters.vmImageName }}

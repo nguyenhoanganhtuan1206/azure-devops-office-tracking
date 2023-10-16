@@ -31,21 +31,26 @@ jobs:
           ArtifactName: "drop"
           publishLocation: "Container"
 
-  - job: Build_Push_Image
-    displayName: "Build an Push an image to Container Registry"
-    dependsOn: Build
-    condition: succeeded()
+      - script: |
+          cd $(Build.SourcesDirectory)
+          ls -d build/libs/*/
+        displayName: List all folders in build/libs
 
-    variables:
-      imageRepository: "officetrackingimage"
-      containerRegistry: "officetrackingcr.azurecr.io"
+  # - job: Build_Push_Image
+  #   displayName: "Build an Push an image to Container Registry"
+  #   dependsOn: Build
+  #   condition: succeeded()
 
-    steps:
-      - task: Docker@2
-        displayName: "Build and Push"
-        inputs:
-          command: buildAndPush
-          repository: "officetrackingdocker"
-          containerRegistry: myDRServiceConnection
-          Dockerfile: "**/Dockerfile"
-          tags: 'latest'
+  #   variables:
+  #     imageRepository: "officetrackingimage"
+  #     containerRegistry: "officetrackingcr.azurecr.io"
+
+  #   steps:
+  #     - task: Docker@2
+  #       displayName: "Build and Push"
+  #       inputs:
+  #         command: buildAndPush
+  #         repository: "officetrackingdocker"
+  #         containerRegistry: myDRServiceConnection
+  #         Dockerfile: "**/Dockerfile"
+  #         tags: 'latest'
