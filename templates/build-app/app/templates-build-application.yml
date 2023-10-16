@@ -18,17 +18,17 @@ jobs:
           dos2unix gradlew
         displayName: Convert the line endings to Unix format
 
-      - script: |
-          ls -la
-          cd $(Build.SourcesDirectory)
-          ls -d build/libs/*/
-        displayName: List all folders in build/libs
-
       - script: chmod +x gradlew
         displayName: Grant permission for gradlew
 
       - script: ./gradlew clean build
         displayName: Clean and build new artifact
+
+      - script: |
+          ls -la
+          cd $(Build.SourcesDirectory)
+          ls -d build/libs/*/
+        displayName: List all folders in build/libs
 
       - task: PublishBuildArtifacts@1
         displayName: Publish build artifact
