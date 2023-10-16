@@ -30,6 +30,12 @@ stages:
   # condition: succeeded()
 
   jobs:
+    - job: 
+      steps:
+        - script: |
+           cd path/to/your/build/libs
+           ls -d */
+
     - deployment: Deploy
       pool:
         vmImage: ${{ parameters.vmImageName }}
