@@ -50,7 +50,7 @@ stages:
             echo "List all folder ..."
             ls -la 
             cat .env.sample
-          displayName: 'Retrieving secrets and create .env file'
+        displayName: 'Retrieving secrets and create .env file'
 
     - deployment: Deploy
       pool:
