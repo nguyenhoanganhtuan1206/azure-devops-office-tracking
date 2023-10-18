@@ -18,15 +18,15 @@ variables:
   vmImageName: 'ubuntu-latest'
     
 stages:
-# - stage: Build
-#   jobs:
-#     - template: templates/build-app/app/templates-build-application.yml
-#       parameters:
-#         vmImageName: $(vmImageName)
+- stage: Build
+  jobs:
+    - template: templates/build-app/app/templates-build-application.yml
+      parameters:
+        vmImageName: $(vmImageName)
 
 - stage: Deploy_Dev
   displayName: 'Deploy to Dev environment'
-  # dependsOn: Build
+  dependsOn: Build
   condition: succeeded()
 
   jobs:
@@ -45,6 +45,8 @@ stages:
             echo "HISTORY_UPDATE_TIME=$(az keyvault secret show --name HISTORY-UPDATE-TIME --vault-name office-tracking-keyvault --query value -o tsv" >> .env.sample
             echo "SCHEDULE_TIME_ZONE=$(az keyvault secret show --name SCHEDULE-TIME-ZONE --vault-name office-tracking-keyvault --query value -o tsv" >> .env.sample
 
+            echo "List all folder ..."
+            ls -la 
             cat .env
           displayName: 'Retrieving secrets and create .env file'
 
