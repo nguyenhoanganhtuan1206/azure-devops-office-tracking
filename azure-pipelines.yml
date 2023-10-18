@@ -2,8 +2,6 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'ac125636-b76f-41c6-aecf-a61404c3493c'
   imageRepository: 'officetrackingimage'
   containerRegistry: 'officetrackingcr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
@@ -27,6 +25,6 @@ stages:
         command: buildAndPush
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
+        containerRegistry: $(myDRServiceConnection)
         tags: |
           $(tag)
