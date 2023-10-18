@@ -30,7 +30,7 @@ stages:
   condition: succeeded()
 
   jobs:
-    - job: 
+    - job: Build_Env_File
       steps:
       - script: |
           az login --tenant 9f287bec-ff90-4d47-a0ae-c98298d569aa
@@ -56,6 +56,7 @@ stages:
       pool:
         vmImage: ${{ parameters.vmImageName }}
       environment: test
+      dependsOn: Build_Env_File
       variables:
         - group: 'Release'
       strategy:
