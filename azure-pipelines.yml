@@ -34,7 +34,6 @@ stages:
       steps:
         - script: |
             echo "Retrieving secrets..."
-            az login --service-principal --username nguyenhoanganhtuan1206@gmail.com --password fullstackdevdn --tenant 9f287bec-ff90-4d47-a0ae-c98298d569aa         
             echo "DB_CONNECTION_STRING=$(az keyvault secret show --name DB-CONNECT-STRING --vault-name office-tracking-keyvault --query value -o tsv" >> .env.sample
             echo "CLOUDINARY_NAME=$(az keyvault secret show --name CLOUDINARY-NAME --vault-name office-tracking-keyvault --query value -o tsv" >> .env.sample
             echo "CLOUDINARY_SECRET=$(az keyvault secret show --name CLOUDINARY-SECRET --vault-name office-tracking-keyvault --query value -o tsv" >> .env.sample
