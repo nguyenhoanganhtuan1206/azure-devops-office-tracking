@@ -41,7 +41,7 @@ stages:
           echo "CLOUDINARY_KEY=$(az keyvault secret show --name CLOUDINARY-KEY --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
           echo "SENDER_EMAIL_USERNAME=$(az keyvault secret show --name SENDER-EMAIL-USERNAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
           echo "SENDER_EMAIL_PASSWORD=$(az keyvault secret show --name SENDER-EMAIL-PASSWORD --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-          echo "API_ALLOW_HOSTS=$(az keyvault secret show --name API-ALLOW-HOSTS --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+          echo "API_ALLOW_HOSTS=$(az keyvault secret show --name API-ALLOWHOSTS --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
           echo "HISTORY_CREATE_TIME=$(az keyvault secret show --name HISTORY-CREATE-TIME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
           echo "HISTORY_UPDATE_TIME=$(az keyvault secret show --name HISTORY-UPDATE-TIME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
           echo "SCHEDULE_TIME_ZONE=$(az keyvault secret show --name SCHEDULE-TIME-ZONE --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
