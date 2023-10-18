@@ -18,11 +18,11 @@ variables:
   vmImageName: 'ubuntu-latest'
     
 stages:
-- stage: Build
-  jobs:
-    - template: templates/build-app/app/templates-build-application.yml
-      parameters:
-        vmImageName: $(vmImageName)
+# - stage: Build
+#   jobs:
+#     - template: templates/build-app/app/templates-build-application.yml
+#       parameters:
+#         vmImageName: $(vmImageName)
 
 - stage: Deploy_Dev
   displayName: 'Deploy to Dev environment'
@@ -30,27 +30,37 @@ stages:
   condition: succeeded()
 
   jobs:
-    - deployment: Deploy
-      pool:
-        vmImage: ${{ parameters.vmImageName }}
-      environment: test
-      variables:
-        - group: 'Release'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - download: current 
-              name: drop
-              displayName: Download Artifact
+    - job: 
+      steps:
+        - script: |
+            echo "Retrieving secrets..."
+            az login 
+            echo "Creating env file..."
+            echo "DB_CONNECTION_STRING=$(jq -r .DB_CONNECTION_STRING)" > .env
+            cat .env
+          displayName: 'Retrieving secrets and create .env file'
 
-            - script: |
-                chmod +x /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar
-              displayName: Grant permission
+    # - deployment: Deploy
+    #   pool:
+    #     vmImage: ${{ parameters.vmImageName }}
+    #   environment: test
+    #   variables:
+    #     - group: 'Release'
+    #   strategy:
+    #     runOnce:
+    #       deploy:
+    #         steps:
+    #         - download: current 
+    #           name: drop
+    #           displayName: Download Artifact
 
-            - task: AzureWebAppContainer@1
-              inputs:
-                appName: $(WebAppDev)
-                azureSubscription: myARMServiceConnection
-                containers: 'officetrackingcr.azurecr.io/officetrackingdocker:latest'
-                containerCommand: 'java -jar /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar'
+    #         - script: |
+    #             chmod +x /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar
+    #           displayName: Grant permission
+
+    #         - task: AzureWebAppContainer@1
+    #           inputs:
+    #             appName: $(WebAppDev)
+    #             azureSubscription: myARMServiceConnection
+    #             containers: 'officetrackingcr.azurecr.io/officetrackingdocker:latest'
+    #             containerCommand: 'java -jar /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar'
