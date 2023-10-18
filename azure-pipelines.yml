@@ -26,7 +26,7 @@ stages:
 
 - stage: Deploy_Dev
   displayName: 'Deploy to Dev environment'
-  dependsOn: Build
+  # dependsOn: Build
   condition: succeeded()
 
   jobs:
