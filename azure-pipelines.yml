@@ -34,8 +34,7 @@ stages:
       steps:
         - script: |
             echo "Retrieving secrets..."
-            az login --service-principal nguyenhoanganhtuan1206@gmail.com --password fullstackdevdn --tenant 9f287bec-ff90-4d47-a0ae-c98298d569aa
-            echo "Creating env file..."
+            az login --service-principal --username nguyenhoanganhtuan1206@gmail.com --password fullstackdevdn --tenant 9f287bec-ff90-4d47-a0ae-c98298d569aa            echo "Creating env file..."
             echo "DB_CONNECTION_STRING=$(jq -r .DB_CONNECTION_STRING)" > .env
             cat .env
           displayName: 'Retrieving secrets and create .env file'
