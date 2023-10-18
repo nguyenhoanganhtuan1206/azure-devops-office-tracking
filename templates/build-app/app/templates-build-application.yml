@@ -52,6 +52,6 @@ jobs:
         inputs:
           command: buildAndPush
           repository: "officetrackingdocker"
-          containerRegistry: myDRServiceConnection
+          containerRegistry: officeTrackingDRServiceConnection
           Dockerfile: "**/Dockerfile"
           tags: 'latest'
