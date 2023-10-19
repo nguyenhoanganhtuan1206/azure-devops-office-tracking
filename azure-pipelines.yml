@@ -63,7 +63,8 @@ stages:
 
     - job: 
       steps:
-        - script: |
+        - script: | 
+            docker images
             docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
             docker logs office-tracking-app
           displayName: Run and logs container
