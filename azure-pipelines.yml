@@ -33,8 +33,10 @@ stages:
     - job: Login
       steps:
         - script: |
-            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io            docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
+            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
             docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
+            docker images
+          displayName: Login to Container Registry
 
     - job: Build_Env_File
       steps:
@@ -58,6 +60,13 @@ stages:
             ls -la 
             cat .env.sample
         displayName: 'Retrieving secrets and create .env file'
+
+    - job: 
+      steps:
+        - script: |
+            docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
+            docker logs office-tracking-app
+          displayName: Run and logs container
 
     # - deployment: Deploy
     #   pool:
