@@ -33,7 +33,7 @@ stages:
     - job: Login
       steps:
         - script: |
-            docker login officetrackingcr.azurecr.io < officetrackingCR < 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0
+            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io            docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
             docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
 
     - job: Build_Env_File
