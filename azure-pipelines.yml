@@ -53,16 +53,37 @@ stages:
             cat .env.sample
         displayName: 'Retrieving secrets and create .env file'
 
-    - job: 
-      steps:
-        - script: | 
-            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
-            docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
-            docker images
-            docker images
-            docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
-            docker logs office-tracking-app
-          displayName: Run and logs container
+    - deployment: Deploy
+      pool:
+        vmImage: ${{ parameters.vmImageName }}
+      environment: test
+      dependsOn: Build_Env_File
+      variables:
+      - group: 'Release'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - script: | 
+                  docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
+                  docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
+                  docker images
+                  docker images
+                  docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
+                  docker logs office-tracking-app
+                displayName: Run and logs container
+                
+              - download: current
+                name: drop
+                displayName: Download Artifact  
+              - task: AzureRmWebAppDeployment@4
+                inputs:
+                  ConnectionType: 'AzureRM'
+                  azureSubscription: 'myARMServiceConnection'
+                  appType: 'webAppLinux'
+                  WebAppName: 'office-tracking-dev'
+                  packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+                  RuntimeStack: 'JAVA|17-java17'
 
     # - deployment: Deploy
     #   pool:
