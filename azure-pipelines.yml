@@ -65,7 +65,7 @@ stages:
       pool:
         vmImage: ${{ parameters.vmImageName }}
       environment: test
-      dependsOn: Build_Env_File
+      # dependsOn: Build_Env_File
       variables:
       - group: 'Release'
       strategy:
