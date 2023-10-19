@@ -30,14 +30,6 @@ stages:
   condition: succeeded()
 
   jobs:
-    - job: Login
-      steps:
-        - script: |
-            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
-            docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
-            docker images
-          displayName: Login to Container Registry
-
     - job: Build_Env_File
       steps:
       - script: |
@@ -64,6 +56,9 @@ stages:
     - job: 
       steps:
         - script: | 
+            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
+            docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
+            docker images
             docker images
             docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
             docker logs office-tracking-app
