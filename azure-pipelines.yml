@@ -34,21 +34,6 @@ stages:
       pool:
         vmImage: ${{ parameters.vmImageName }}
       environment: test
-      # dependsOn: Build_Env_File
-      variables:
-      - group: 'Release'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - download: current
-                name: drop
-                displayName: Download Artifact  
-
-    - deployment: Deploy
-      pool:
-        vmImage: ${{ parameters.vmImageName }}
-      environment: test
       dependsOn: Build_Env_File
       variables:
         - group: 'Release'
