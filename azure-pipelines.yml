@@ -30,37 +30,6 @@ stages:
   condition: succeeded()
 
   jobs:
-    - job: 
-      steps:
-        - script: |
-            az login --tenant 9f287bec-ff90-4d47-a0ae-c98298d569aa
-            echo "Retrieving secrets..."
-            echo "DB_CONNECTION_STRING=$(az keyvault secret show --name DB-CONNECT-STRING --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "DATABASE_USERNAME=$(az keyvault secret show --name DATABASE-USERNAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "DATABASE_PASSWORD=$(az keyvault secret show --name DATABASE-PASSWORD --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "CLOUDINARY_NAME=$(az keyvault secret show --name CLOUDINARY-NAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "CLOUDINARY_SECRET=$(az keyvault secret show --name CLOUDINARY-SECRET --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "CLOUDINARY_KEY=$(az keyvault secret show --name CLOUDINARY-KEY --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "SENDER_EMAIL_USERNAME=$(az keyvault secret show --name SENDER-EMAIL-USERNAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "SENDER_EMAIL_PASSWORD=$(az keyvault secret show --name SENDER-EMAIL-PASSWORD --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "API_ALLOW_HOSTS=$(az keyvault secret show --name API-ALLOWHOSTS --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "HISTORY_CREATE_TIME=$(az keyvault secret show --name HISTORY-CREATE-TIME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "HISTORY_UPDATE_TIME=$(az keyvault secret show --name HISTORY-UPDATE-TIME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-            echo "SCHEDULE_TIME_ZONE=$(az keyvault secret show --name SCHEDULE-TIME-ZONE --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
-
-              echo "List all folder ..."
-              ls -la 
-              cat .env.sample
-          displayName: 'Retrieving secrets and create .env file'
-        - script: | 
-            docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
-            docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
-            docker images
-            docker images
-            docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
-            docker logs office-tracking-app
-          displayName: Run and logs container
-
     - deployment: Deploy
       pool:
         vmImage: ${{ parameters.vmImageName }}
@@ -76,28 +45,58 @@ stages:
                 name: drop
                 displayName: Download Artifact  
 
-    # - deployment: Deploy
-    #   pool:
-    #     vmImage: ${{ parameters.vmImageName }}
-    #   environment: test
-    #   dependsOn: Build_Env_File
-    #   variables:
-    #     - group: 'Release'
-    #   strategy:
-    #     runOnce:
-    #       deploy:
-    #         steps:
-    #         - download: current 
-    #           name: drop
-    #           displayName: Download Artifact
+    - deployment: Deploy
+      pool:
+        vmImage: ${{ parameters.vmImageName }}
+      environment: test
+      dependsOn: Build_Env_File
+      variables:
+        - group: 'Release'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - download: current 
+              name: drop
+              displayName: Download Artifact
+            
+            - script: |
+                az login --tenant 9f287bec-ff90-4d47-a0ae-c98298d569aa
+                echo "Retrieving secrets..."
+                echo "DB_CONNECTION_STRING=$(az keyvault secret show --name DB-CONNECT-STRING --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "DATABASE_USERNAME=$(az keyvault secret show --name DATABASE-USERNAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "DATABASE_PASSWORD=$(az keyvault secret show --name DATABASE-PASSWORD --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "CLOUDINARY_NAME=$(az keyvault secret show --name CLOUDINARY-NAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "CLOUDINARY_SECRET=$(az keyvault secret show --name CLOUDINARY-SECRET --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "CLOUDINARY_KEY=$(az keyvault secret show --name CLOUDINARY-KEY --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "SENDER_EMAIL_USERNAME=$(az keyvault secret show --name SENDER-EMAIL-USERNAME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "SENDER_EMAIL_PASSWORD=$(az keyvault secret show --name SENDER-EMAIL-PASSWORD --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "API_ALLOW_HOSTS=$(az keyvault secret show --name API-ALLOWHOSTS --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "HISTORY_CREATE_TIME=$(az keyvault secret show --name HISTORY-CREATE-TIME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "HISTORY_UPDATE_TIME=$(az keyvault secret show --name HISTORY-UPDATE-TIME --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
+                echo "SCHEDULE_TIME_ZONE=$(az keyvault secret show --name SCHEDULE-TIME-ZONE --vault-name office-tracking-keyvault --query value -o tsv)" >> .env.sample
 
-    #         - script: |
-    #             chmod +x /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar
-    #           displayName: Grant permission
+                  echo "List all folder ..."
+                  ls -la 
+                  cat .env.sample
+                displayName: 'Retrieving secrets and create .env file'
 
-    #         - task: AzureWebAppContainer@1
-    #           inputs:
-    #             appName: $(WebAppDev)
-    #             azureSubscription: myARMServiceConnection
-    #             containers: 'officetrackingcr.azurecr.io/officetrackingdocker:latest'
-    #             containerCommand: 'java -jar /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar'
+            - script: | 
+                docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
+                docker pull officetrackingcr.azurecr.io/officetrackingdocker:latest
+                docker images
+                docker images
+                docker run -dp 8080:8080 --env-file .env.sample --name office-tracking-app officetrackingcr.azurecr.io/officetrackingdocker:latest
+                docker logs office-tracking-app
+              displayName: Run and logs container
+
+            - script: |
+                chmod +x /home/vsts/work/1/drop/build/libs/office-tracking-0.0.1-SNAPSHOT.jar
+              displayName: Grant permission
+
+            - task: AzureWebAppContainer@1
+              inputs:
+                azureSubscription: 'myARMServiceConnection'
+                appName: '$(WebAppDev)'
+                containers: 'officetrackingcr.azurecr.io/officetrackingdocker:latest'
+                containerCommand: 'docker run --env-file .env.sample officetrackingcr.azurecr.io/officetrackingdocker:latest'
