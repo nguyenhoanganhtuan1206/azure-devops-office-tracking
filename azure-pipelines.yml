@@ -64,7 +64,7 @@ stages:
                   echo "List all folder ..."
                   ls -la 
                   cat .env.sample
-                displayName: 'Retrieving secrets and create .env file'
+              displayName: 'Retrieving secrets and create .env file'
 
             - script: | 
                 docker login -u officetrackingCR --password 6A+TNtG8uTVtPwgstzX/CCGNW+pvSN4U/yIMcmIViF+ACRAIeDx0  officetrackingcr.azurecr.io
